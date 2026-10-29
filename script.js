@@ -1,172 +1,141 @@
 // ==========================================
 // WEDDING CARD INTERACTIVE SCRIPT
-// Quang Anh & Diệu Thủy - 10/12/2026
+// Quang Anh & Đoàn Diệu Thủy - 10/12/2026
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
-  // 1. HỆ THỐNG NHẠC LIÊN TỤC KHÔNG NGẮT
-  //    Seamless looping — dùng HTMLAudioElement preload kép
-  //    để crossfade mượt khi gần hết bài (nếu nhiều bài)
+  // 1. HỆ THỐNG NHẠC "MỘT ĐỜI" PHÁT LIÊN TỤC KHÔNG NGẮT
+  //    Sử dụng Web Audio API AudioBufferSourceNode với loop = true
+  //    đảm bảo phát liền mạch chuẩn xác từng mili-giây!
   // ==========================================
   const openCardBtn = document.getElementById('openCardBtn');
   const envelopeBox = document.getElementById('envelopeBox');
   const envelopeOverlay = document.getElementById('envelopeOverlay');
   const musicToggleBtn = document.getElementById('musicToggleBtn');
   const musicDisk = musicToggleBtn ? musicToggleBtn.querySelector('.music-disk') : null;
+  const bgAudioFallback = document.getElementById('bgAudio');
 
-  // Danh sách nhạc — có thể thêm nhiều bài
-  const playlist = [
-    'assets/wedding_song_seamless.mp3',
-    'assets/full_romantic_song.mp3'
-  ];
-  let currentTrack = 0;
-  let isMusicPlaying = false;
-  let crossfadeStarted = false;
+  let audioCtx = null;
+  let audioBuffer = null;
+  let sourceNode = null;
+  let gainNode = null;
+  let isPlaying = false;
+  let pauseTime = 0;
+  let startTime = 0;
 
-  // Player A (đang phát)
-  const playerA = document.getElementById('bgAudio');
-  if (playerA) {
-    playerA.src = playlist[0];
-    playerA.volume = 1;
-    playerA.loop = false;       // Ta tự quản lý loop để crossfade
-    playerA.preload = 'auto';
-  }
-
-  // Player B (preload bài tiếp theo)
-  const playerB = new Audio();
-  playerB.volume = 0;
-  playerB.preload = 'auto';
-
-  let activePlayer = playerA;
-  let standbyPlayer = playerB;
-
-  function getNextTrackIdx(current) {
-    return (current + 1) % playlist.length;
-  }
-
-  function preloadNextTrack() {
-    const nextIdx = getNextTrackIdx(currentTrack);
-    standbyPlayer.src = playlist[nextIdx];
-    standbyPlayer.load();
-  }
-
-  // Crossfade 4 giây cuối bài sang bài tiếp
-  function startCrossfade() {
-    if (crossfadeStarted) return;
-    crossfadeStarted = true;
-
-    const fadeDuration = 4000; // ms
-    const steps = 40;
-    const interval = fadeDuration / steps;
-    let step = 0;
-
-    currentTrack = getNextTrackIdx(currentTrack);
-
-    standbyPlayer.currentTime = 0;
-    standbyPlayer.play().catch(() => {});
-
-    const fade = setInterval(() => {
-      step++;
-      const ratio = step / steps;
-      activePlayer.volume = Math.max(0, 1 - ratio);
-      standbyPlayer.volume = Math.min(1, ratio);
-
-      if (step >= steps) {
-        clearInterval(fade);
-        activePlayer.pause();
-        activePlayer.currentTime = 0;
-
-        // Hoán đổi vai trò
-        const temp = activePlayer;
-        activePlayer = standbyPlayer;
-        standbyPlayer = temp;
-        crossfadeStarted = false;
-
-        // Preload bài kế tiếp
-        preloadNextTrack();
+  function initWebAudio() {
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+        fetch('assets/mot_doi.mp3')
+          .then(res => res.arrayBuffer())
+          .then(buf => audioCtx.decodeAudioData(buf))
+          .then(decoded => {
+            audioBuffer = decoded;
+            // Nếu người dùng đã mở thiệp trước khi decode xong, tự động kích hoạt
+            if (isPlaying && !sourceNode) {
+              startWebAudioPlayback(0);
+            }
+          })
+          .catch(e => {
+            console.log('Web Audio fetch error, fallback to HTML Audio:', e);
+          });
       }
-    }, interval);
-  }
-
-  // Theo dõi tiến trình để crossfade trước 4 giây cuối bài
-  function setupCrossfadeWatcher() {
-    if (!activePlayer.duration) return;
-    const timeLeft = activePlayer.duration - activePlayer.currentTime;
-    if (timeLeft <= 5 && timeLeft > 0) {
-      startCrossfade();
+    } catch (e) {
+      console.log('Web Audio not supported:', e);
     }
   }
 
-  // Fallback: nếu bài kết thúc mà không crossfade kịp
-  playerA.addEventListener('ended', () => {
-    if (!crossfadeStarted) startCrossfade();
-  });
-  playerB.addEventListener('ended', () => {
-    if (!crossfadeStarted) startCrossfade();
-  });
+  function startWebAudioPlayback(offset = 0) {
+    if (!audioCtx || !audioBuffer) return false;
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    try {
+      if (sourceNode) {
+        sourceNode.stop();
+        sourceNode.disconnect();
+      }
+    } catch (e) {}
 
-  let crossfadeWatcher = null;
+    sourceNode = audioCtx.createBufferSource();
+    sourceNode.buffer = audioBuffer;
+    sourceNode.loop = true; // Hard real-time hardware sample-accurate seamless looping!
+
+    gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+
+    sourceNode.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    const safeOffset = offset % audioBuffer.duration;
+    sourceNode.start(0, safeOffset);
+    startTime = audioCtx.currentTime - safeOffset;
+    return true;
+  }
 
   function playMusic() {
-    if (!activePlayer) return;
-    activePlayer.play().then(() => {
-      isMusicPlaying = true;
-      if (musicDisk) musicDisk.classList.add('rotating');
+    isPlaying = true;
+    if (musicDisk) musicDisk.classList.add('rotating');
 
-      // Preload bài kế
-      preloadNextTrack();
-
-      // Theo dõi để crossfade
-      if (crossfadeWatcher) clearInterval(crossfadeWatcher);
-      crossfadeWatcher = setInterval(setupCrossfadeWatcher, 1000);
-    }).catch(err => {
-      console.log('Audio autoplay prevented:', err);
-    });
+    // Ưu tiên Web Audio API (hoàn toàn không ngắt quãng giữa các vòng lặp)
+    const success = startWebAudioPlayback(pauseTime);
+    if (!success) {
+      // Fallback HTML5 Audio nếu Web Audio chưa decode xong
+      if (bgAudioFallback) {
+        bgAudioFallback.play().catch(() => {});
+      }
+    }
   }
 
-  function pauseAllPlayers() {
-    activePlayer.pause();
-    standbyPlayer.pause();
-  }
+  function pauseMusic() {
+    isPlaying = false;
+    if (musicDisk) musicDisk.classList.remove('rotating');
 
-  function resumeAllPlayers() {
-    activePlayer.play().catch(() => {});
-    if (standbyPlayer.src && standbyPlayer.volume > 0) {
-      standbyPlayer.play().catch(() => {});
+    if (sourceNode && audioCtx) {
+      pauseTime = (audioCtx.currentTime - startTime) % (audioBuffer ? audioBuffer.duration : 1);
+      try {
+        sourceNode.stop();
+        sourceNode.disconnect();
+      } catch (e) {}
+      sourceNode = null;
+    }
+    if (bgAudioFallback) {
+      bgAudioFallback.pause();
     }
   }
 
   function toggleMusic() {
-    if (isMusicPlaying) {
-      pauseAllPlayers();
-      isMusicPlaying = false;
-      if (musicDisk) musicDisk.classList.remove('rotating');
-      if (crossfadeWatcher) clearInterval(crossfadeWatcher);
+    if (isPlaying) {
+      pauseMusic();
     } else {
-      resumeAllPlayers();
-      isMusicPlaying = true;
-      if (musicDisk) musicDisk.classList.add('rotating');
-      if (crossfadeWatcher) clearInterval(crossfadeWatcher);
-      crossfadeWatcher = setInterval(setupCrossfadeWatcher, 1000);
+      playMusic();
     }
   }
 
-  // Xử lý Page Visibility — không dừng nhạc khi switch tab trên mobile
-  document.addEventListener('visibilitychange', () => {
-    if (!isMusicPlaying) return;
-    if (document.visibilityState === 'visible') {
-      resumeAllPlayers();
-    }
-  });
+  // Khởi tạo audio context khi load trang
+  initWebAudio();
 
+  // Mở phong bì thư 3D & Chuyển sang chế độ Web App
   if (openCardBtn) {
     openCardBtn.addEventListener('click', () => {
+      // Chế độ full màn hình web app trên điện thoại
+      if (window.innerWidth <= 768) {
+        const docEl = document.documentElement;
+        const reqFs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+        if (reqFs) {
+          reqFs.call(docEl).catch(() => {});
+        }
+      }
+
       envelopeBox.classList.add('open');
       playMusic();
 
       setTimeout(() => {
         envelopeOverlay.classList.add('opened');
+        // Kích hoạt animation khi bắt đầu cuộn
         checkRevealOnScroll();
       }, 900);
     });
@@ -176,8 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
     musicToggleBtn.addEventListener('click', toggleMusic);
   }
 
-  // 2. BỘ ĐẾM NGƯỢC CHÍNH XÁC ĐẾN NGÀY CƯỚI: 10/12/2026 17:30:00
-  // Tháng 12 là tháng 11 trong JS Date (0-indexed: 0 = Jan, 11 = Dec)
+  // ==========================================
+  // 2. BỘ ĐẾM NGƯỢC CHÍNH XÁC ĐẾN NGÀY CƯỚI
+  // ==========================================
   const weddingDate = new Date(2026, 11, 10, 17, 30, 0).getTime();
 
   function updateCountdown() {
@@ -211,14 +181,16 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
-  // 3. Hiệu ứng Scroll Reveal khi cuộn màn hình
+  // ==========================================
+  // 3. HIỆU ỨNG SCROLL REVEAL
+  // ==========================================
   function checkRevealOnScroll() {
     const elements = document.querySelectorAll('.reveal-on-scroll');
     const windowHeight = window.innerHeight;
 
     elements.forEach(el => {
       const elementTop = el.getBoundingClientRect().top;
-      if (elementTop < windowHeight - 80) {
+      if (elementTop < windowHeight - 60) {
         el.classList.add('active');
       }
     });
@@ -227,7 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', checkRevealOnScroll);
   window.addEventListener('resize', checkRevealOnScroll);
 
-  // 4. Form Xác Nhận Tham Dự (RSVP)
+  // ==========================================
+  // 4. FORM XÁC NHẬN THAM DỰ (RSVP)
+  // ==========================================
   const rsvpForm = document.getElementById('rsvpForm');
   const wishesList = document.getElementById('wishesList');
 
@@ -248,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <strong>${escapeHTML(name)}</strong>
           <span class="wish-time">${escapeHTML(side)} • Vừa xong</span>
         </div>
-        <p class="wish-content">${wishes ? escapeHTML(wishes) : (attend === 'yes' ? 'Rất vui và hạnh phúc khi được đến chung vui cùng Quang Anh & Diệu Thủy! ❤️' : 'Gửi lời chúc mừng trăm năm hạnh phúc đến hai bạn!')}</p>
+        <p class="wish-content">${wishes ? escapeHTML(wishes) : (attend === 'yes' ? 'Rất vui và hạnh phúc khi được đến chung vui cùng Quang Anh & Đoàn Diệu Thủy! ❤️' : 'Gửi lời chúc mừng trăm năm hạnh phúc đến hai bạn!')}</p>
       `;
 
       if (wishesList) {
@@ -260,7 +234,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. Hộp Mừng Cưới & Tabs
+  // ==========================================
+  // 5. HỘP MỪNG CƯỚI & TABS
+  // ==========================================
   const showQrBtn = document.getElementById('showQrBtn');
   const giftModal = document.getElementById('giftModal');
   const closeGiftModal = document.getElementById('closeGiftModal');
@@ -305,26 +281,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Thêm Vào Lịch (Google Calendar)
+  // ==========================================
+  // 6. THÊM VÀO LỊCH (GOOGLE CALENDAR)
+  // ==========================================
   const addCalendarBtn = document.getElementById('addCalendarBtn');
   if (addCalendarBtn) {
     addCalendarBtn.addEventListener('click', () => {
-      const title = encodeURIComponent("Lễ Thành Hôn - Quang Anh & Diệu Thủy");
-      const details = encodeURIComponent("Trân trọng kính mời quý khách tham dự lễ thành hôn của Quang Anh & Diệu Thủy tại Trống Đồng Palace, Hà Nội.");
+      const title = encodeURIComponent("Lễ Thành Hôn - Quang Anh & Đoàn Diệu Thủy");
+      const details = encodeURIComponent("Trân trọng kính mời quý khách tham dự lễ thành hôn của Quang Anh & Đoàn Diệu Thủy tại Trống Đồng Palace, Hà Nội.");
       const location = encodeURIComponent("Trống Đồng Palace, 65 Quán Sứ, Hoàn Kiếm, Hà Nội");
       const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20261210T103000Z/20261210T143000Z&details=${details}&location=${location}`;
       window.open(gcalUrl, '_blank');
     });
   }
 
-  // 7. Chia Sẻ Thiệp
+  // ==========================================
+  // 7. CHIA SẺ THIỆP
+  // ==========================================
   const shareBtnTop = document.getElementById('shareBtnTop');
   if (shareBtnTop) {
     shareBtnTop.addEventListener('click', () => {
       if (navigator.share) {
         navigator.share({
-          title: 'Thiệp Cưới Online - Quang Anh & Diệu Thủy',
-          text: 'Trân trọng kính mời quý khách tham dự lễ thành hôn của Quang Anh & Diệu Thủy!',
+          title: 'Thiệp Cưới Online - Quang Anh & Đoàn Diệu Thủy',
+          text: 'Trân trọng kính mời quý khách tham dự lễ thành hôn của Quang Anh & Đoàn Diệu Thủy!',
           url: window.location.href
         }).catch(err => console.log('Share canceled'));
       } else {
@@ -334,7 +314,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 8. Khởi tạo hiệu ứng cánh hoa, trái tim & bụi sao rơi
+  // ==========================================
+  // 8. KHỞI TẠO CÁNH HOA & SAO RƠI
+  // ==========================================
   initPetalsCanvas();
 });
 
@@ -410,7 +392,7 @@ function initPetalsCanvas() {
   });
 
   const particles = [];
-  const particleCount = 42; // Tăng thêm số lượng hạt hiệu ứng
+  const particleCount = 42;
 
   for (let i = 0; i < particleCount; i++) {
     particles.push({
@@ -448,7 +430,6 @@ function initPetalsCanvas() {
       ctx.fillStyle = p.color + p.opacity + ')';
 
       if (p.type === 'heart') {
-        // Vẽ hình trái tim nhỏ rơi
         const s = p.size * 0.55;
         ctx.beginPath();
         ctx.moveTo(0, s * 0.3);
@@ -456,12 +437,10 @@ function initPetalsCanvas() {
         ctx.bezierCurveTo(s * 0.8, s * 0.6, s, -s * 0.5, 0, s * 0.3);
         ctx.fill();
       } else if (p.type === 'star') {
-        // Hạt bụi sao vàng lấp lánh
         ctx.beginPath();
         ctx.arc(0, 0, p.size * 0.3, 0, Math.PI * 2);
         ctx.fill();
       } else {
-        // Cánh hoa mềm mại
         ctx.beginPath();
         ctx.ellipse(0, 0, p.size, p.size / 2.2, Math.PI / 4, 0, 2 * Math.PI);
         ctx.fill();

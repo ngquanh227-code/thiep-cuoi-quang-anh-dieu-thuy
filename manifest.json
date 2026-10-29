@@ -1,0 +1,22 @@
+{
+  "name": "Thiệp Cưới Quang Anh & Đoàn Diệu Thủy",
+  "short_name": "Thiệp Cưới",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf7f2",
+  "theme_color": "#a11824",
+  "description": "Thư mời tham dự lễ thành hôn Quang Anh & Đoàn Diệu Thủy - 10.12.2026 tại Trống Đồng Palace, Hà Nội",
+  "icons": [
+    {
+      "src": "assets/cover_hero.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "assets/cover_hero.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
