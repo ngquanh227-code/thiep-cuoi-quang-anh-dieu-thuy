@@ -20,7 +20,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Thiệp Cưới">
-  <link rel="stylesheet" href="style.css?v=20261105_06">
+  <link rel="stylesheet" href="style.css?v=20261105_07">
 </head>
 <body>
 
@@ -117,14 +117,39 @@
           </div>
         </div>
 
-        <div class="hero-photo-frame photo-reveal-box">
+        <div class="hero-photo-frame photo-reveal-box" id="heroPhotoSlider">
           <div class="corner-ornament tl"></div>
           <div class="corner-ornament tr"></div>
           <div class="corner-ornament bl"></div>
           <div class="corner-ornament br"></div>
           
-          <img src="assets/cover_hero.jpg" alt="Quang Anh & Diệu Thủy" class="hero-img">
-          
+          <div class="hero-slides-wrapper" id="heroSlidesWrapper">
+            <div class="hero-slide active">
+              <img src="assets/cover_hero.jpg" alt="Quang Anh & Diệu Thủy" class="hero-img">
+            </div>
+            <div class="hero-slide">
+              <img src="assets/gallery_kiss.jpg" alt="Nụ hôn ngọt ngào dưới khăn voan" class="hero-img">
+            </div>
+            <div class="hero-slide">
+              <img src="assets/story_1.jpg" alt="Quân phục sĩ quan & Áo dài ren trắng" class="hero-img">
+            </div>
+            <div class="hero-slide">
+              <img src="assets/couple_sitting.jpg" alt="Khoảnh khắc hạnh phúc của Quang Anh & Diệu Thủy" class="hero-img">
+            </div>
+          </div>
+
+          <!-- Hero Slide Navigation Arrows -->
+          <button class="hero-nav-arrow hero-prev" id="heroPrevBtn" aria-label="Ảnh trước">‹</button>
+          <button class="hero-nav-arrow hero-next" id="heroNextBtn" aria-label="Ảnh tiếp theo">›</button>
+
+          <!-- Slide Dots -->
+          <div class="hero-dots-container" id="heroDotsContainer">
+            <span class="hero-dot active" data-index="0"></span>
+            <span class="hero-dot" data-index="1"></span>
+            <span class="hero-dot" data-index="2"></span>
+            <span class="hero-dot" data-index="3"></span>
+          </div>
+
           <div class="photo-floating-tag">
             <span>SAVE OUR DATE</span>
           </div>
@@ -333,13 +358,52 @@
         </div>
       </section>
 
-      <!-- SECTION 5: ALBUM ẢNH CƯỚI NGHỆ THUẬT NÂNG CAO (10+ ẢNH SẮC NÉT) -->
-      <section class="section gallery-section reveal-on-scroll">
+      <!-- SECTION 5: ALBUM ẢNH CƯỚI NGHỆ THUẬT (INTERACTIVE SLIDER & SHOWCASE) -->
+      <section class="section gallery-section reveal-on-scroll" id="weddingGallery">
         <div class="section-tag">KHOẢNH KHẮC NGỌT NGÀO</div>
         <h2 class="section-title">Album Hình Cưới</h2>
-        <p class="gallery-subtitle">Chạm vào bất kỳ ảnh nào để xem ở chế độ toàn màn hình</p>
-        
-        <div class="gallery-grid">
+        <p class="gallery-subtitle">Chạm lướt để chuyển ảnh hoặc nhấn vào ảnh để xem trọn vẹn toàn màn hình</p>
+
+        <!-- TRÌNH CHIẾU SLIDER NỔI BẬT VỚI HIỆU ỨNG CHUYỂN CẢNH MƯỢT MÀ -->
+        <div class="showcase-slider-container photo-reveal-box">
+          <div class="slider-progress-bar"><div class="slider-progress-fill" id="sliderProgressFill"></div></div>
+
+          <div class="showcase-main-slider" id="showcaseMainSlider">
+            <div class="slider-stage" id="sliderStage">
+              <!-- Rendered dynamically via JavaScript -->
+            </div>
+
+            <!-- Nút chuyển slide nổi bật -->
+            <button class="slider-nav-btn prev-btn" id="sliderPrevBtn" aria-label="Xem ảnh trước">
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="slider-nav-btn next-btn" id="sliderNextBtn" aria-label="Xem ảnh tiếp theo">
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+
+            <!-- Huy hiệu đếm số ảnh -->
+            <div class="slider-badge-counter" id="sliderBadgeCounter">01 / 14</div>
+          </div>
+
+          <!-- Chú thích ảnh đang chiếu -->
+          <div class="slider-caption-box">
+            <h4 class="slider-caption-title" id="sliderCaptionTitle">Quang Anh & Diệu Thủy</h4>
+            <p class="slider-caption-desc" id="sliderCaptionDesc">Khoảnh khắc ngập tràn hạnh phúc và thiêng liêng</p>
+          </div>
+
+          <!-- Dải thumbnail nhỏ bên dưới có thể lướt và bấm chọn ngay -->
+          <div class="slider-thumbnails-strip" id="sliderThumbnailsStrip">
+            <!-- Thumbnails injected via JavaScript -->
+          </div>
+        </div>
+
+        <div class="gallery-divider-note">
+          <span class="note-line"></span>
+          <span class="note-text">✦ BỘ SƯU TẬP ẢNH CƯỚI ĐẦY ĐỦ ✦</span>
+          <span class="note-line"></span>
+        </div>
+
+        <div class="gallery-grid" id="fullGalleryGrid">
           <div class="gallery-item large" style="--order: 0;" onclick="openLightbox('assets/cover_hero.jpg')">
             <img src="assets/cover_hero.jpg" alt="Quang Anh & Diệu Thủy" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
@@ -578,15 +642,30 @@
     </div>
   </div>
 
-  <!-- MODAL: IMAGE LIGHTBOX -->
-  <div id="lightboxModal" class="lightbox-overlay" onclick="closeLightbox()">
-    <button class="lightbox-close">&times;</button>
-    <img id="lightboxImg" src="" alt="Xem ảnh lớn">
+  <!-- MODAL: IMAGE LIGHTBOX WITH SLIDER NAVIGATION -->
+  <div id="lightboxModal" class="lightbox-overlay" onclick="closeLightbox(event)">
+    <button class="lightbox-close" onclick="closeLightbox(event)" aria-label="Đóng">&times;</button>
+    
+    <button class="lightbox-nav-btn lb-prev" id="lbPrevBtn" onclick="lightboxPrev(event)" aria-label="Ảnh trước">
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button class="lightbox-nav-btn lb-next" id="lbNextBtn" onclick="lightboxNext(event)" aria-label="Ảnh tiếp">
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+
+    <div class="lightbox-content-box" onclick="event.stopPropagation()">
+      <img id="lightboxImg" src="" alt="Xem ảnh lớn" class="lightbox-img">
+      <div class="lightbox-info">
+        <span id="lightboxCounter">01 / 14</span>
+        <span class="lb-sep">•</span>
+        <span id="lightboxCaption">Quang Anh & Diệu Thủy</span>
+      </div>
+    </div>
   </div>
 
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast">Đã sao chép vào bộ nhớ tạm!</div>
 
-  <script src="script.js?v=20261105_06"></script>
+  <script src="script.js?v=20261105_07"></script>
 </body>
 </html>

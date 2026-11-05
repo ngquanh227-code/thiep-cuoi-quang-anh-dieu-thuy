@@ -33,7 +33,8 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
@@ -73,7 +74,7 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -114,7 +115,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.4);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
 }
 
 .music-disk.rotating {
@@ -122,7 +123,9 @@ html, body {
 }
 
 @keyframes spin {
-  100% { transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .music-icon {
@@ -145,12 +148,22 @@ html, body {
   animation: wave 1s ease-in-out infinite alternate;
 }
 
-.music-waves span:nth-child(2) { animation-delay: 0.2s; }
-.music-waves span:nth-child(3) { animation-delay: 0.4s; }
+.music-waves span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.music-waves span:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 @keyframes wave {
-  0% { height: 4px; }
-  100% { height: 14px; }
+  0% {
+    height: 4px;
+  }
+
+  100% {
+    height: 14px;
+  }
 }
 
 /* =========================================
@@ -229,7 +242,7 @@ html, body {
   height: 200px;
   background: #a11824;
   border-radius: 6px;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
   cursor: pointer;
   perspective: 1000px;
 }
@@ -256,7 +269,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.6s ease;
   z-index: 2;
   text-align: center;
@@ -354,7 +367,7 @@ html, body {
   background: radial-gradient(circle at 35% 35%, #e6a122, #9e6406);
   border: 2px solid #fff2a8;
   border-radius: 50%;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.4);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4);
   cursor: pointer;
   z-index: 10;
   display: flex;
@@ -378,7 +391,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .seal-text {
@@ -406,8 +419,15 @@ html, body {
 }
 
 @keyframes pulseRing {
-  0% { transform: scale(0.95); opacity: 0.8; }
-  100% { transform: scale(1.6); opacity: 0; }
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }
 
 .envelope-hint {
@@ -460,9 +480,9 @@ html, body {
 .photo-reveal-box {
   opacity: 0;
   transform: scale(0.92) translateY(18px);
-  transition: opacity 1s cubic-bezier(0.19, 1, 0.22, 1), 
-              transform 1s cubic-bezier(0.19, 1, 0.22, 1),
-              box-shadow 1s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: opacity 1s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1s cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 1s cubic-bezier(0.19, 1, 0.22, 1);
   will-change: transform, opacity;
   position: relative;
   overflow: hidden;
@@ -482,12 +502,10 @@ html, body {
   left: -120%;
   width: 60%;
   height: 200%;
-  background: linear-gradient(
-    60deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.35) 50%,
-    transparent 80%
-  );
+  background: linear-gradient(60deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 80%);
   transform: rotate(25deg);
   pointer-events: none;
   transition: left 1.4s ease-out;
@@ -693,7 +711,7 @@ html, body {
   margin-top: 6px;
 }
 
-/* Hero Frame - Natural Aspect Ratio: 100% Giữ đầu mặt cô dâu chú rể */
+/* Hero Frame - Natural Aspect Ratio & Ken Burns Cinematic Crossfade Slider */
 .hero-photo-frame {
   position: relative;
   width: 100%;
@@ -704,6 +722,38 @@ html, body {
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-md);
   border-radius: 8px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.hero-slides-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fdf6f6;
+  min-height: 480px;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.08);
+  transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 6s ease-out;
+  pointer-events: none;
+}
+
+.hero-slide.active {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
 .hero-img {
@@ -713,18 +763,109 @@ html, body {
   border-radius: 4px;
 }
 
+/* Nút mũi tên chuyển ảnh bìa */
+.hero-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(198, 156, 54, 0.5);
+  color: var(--primary-dark-red);
+  font-size: 24px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.hero-nav-arrow:hover {
+  opacity: 1;
+  background: #fff;
+  transform: translateY(-50%) scale(1.1);
+  color: var(--primary-red);
+}
+
+.hero-nav-arrow.hero-prev {
+  left: 14px;
+}
+
+.hero-nav-arrow.hero-next {
+  right: 14px;
+}
+
+/* Dots chỉ báo ảnh bìa */
+.hero-dots-container {
+  position: absolute;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 10;
+}
+
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(184, 51, 68, 0.4);
+  cursor: pointer;
+  transition: all 0.35s ease;
+}
+
+.hero-dot.active {
+  width: 24px;
+  border-radius: 8px;
+  background: var(--primary-red);
+  box-shadow: 0 0 8px rgba(184, 51, 68, 0.7);
+}
+
 .corner-ornament {
   position: absolute;
   width: 22px;
   height: 22px;
   border: 2px solid var(--primary-red);
   pointer-events: none;
+  z-index: 5;
 }
 
-.corner-ornament.tl { top: 4px; left: 4px; border-right: none; border-bottom: none; }
-.corner-ornament.tr { top: 4px; right: 4px; border-left: none; border-bottom: none; }
-.corner-ornament.bl { bottom: 4px; left: 4px; border-right: none; border-top: none; }
-.corner-ornament.br { bottom: 4px; right: 4px; border-left: none; border-top: none; }
+.corner-ornament.tl {
+  top: 4px;
+  left: 4px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-ornament.tr {
+  top: 4px;
+  right: 4px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner-ornament.bl {
+  bottom: 4px;
+  left: 4px;
+  border-right: none;
+  border-top: none;
+}
+
+.corner-ornament.br {
+  bottom: 4px;
+  right: 4px;
+  border-left: none;
+  border-top: none;
+}
 
 .photo-floating-tag {
   position: absolute;
@@ -739,7 +880,7 @@ html, body {
   letter-spacing: 2px;
   color: var(--primary-dark-red);
   font-weight: 700;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .quote-box {
@@ -760,7 +901,7 @@ html, body {
    ========================================= */
 .parents-section {
   background: #fff;
-  border-top: 1px solid rgba(0,0,0,0.04);
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .family-grid {
@@ -844,11 +985,25 @@ html, body {
 }
 
 @keyframes heartBeat {
-  0% { transform: scale(1); }
-  14% { transform: scale(1.25); }
-  28% { transform: scale(1); }
-  42% { transform: scale(1.25); }
-  70% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.25);
+  }
+
+  28% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.25);
+  }
+
+  70% {
+    transform: scale(1);
+  }
 }
 
 .couple-middle-photo {
@@ -1228,7 +1383,7 @@ html, body {
   height: auto;
   display: block;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 /* =========================================
@@ -1243,6 +1398,237 @@ html, body {
   color: var(--text-muted);
   margin-top: -16px;
   margin-bottom: 24px;
+}
+
+/* =========================================
+   FEATURED WEDDING SHOWCASE SLIDER
+   (TRÌNH CHIẾU CHUYỂN ẢNH CƯỚI NỔI BẬT & TỰ ĐỘNG)
+   ========================================= */
+.showcase-slider-container {
+  max-width: 820px;
+  margin: 0 auto 34px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 36px rgba(184, 51, 68, 0.1);
+  border: 1px solid rgba(198, 156, 54, 0.3);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.slider-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(198, 156, 54, 0.15);
+  border-radius: 4px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.slider-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-gold), var(--primary-red));
+  border-radius: 4px;
+  transition: width 0.1s linear;
+}
+
+.showcase-main-slider {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  max-height: 560px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #2c1a1d 0%, #150a0c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-stage {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.showcase-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.92) translateZ(0);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.showcase-slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateZ(0);
+}
+
+.showcase-slide img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.5s ease;
+}
+
+.showcase-slide img:hover {
+  transform: scale(1.02);
+}
+
+.slider-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--accent-gold);
+  color: var(--primary-dark-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  transition: all 0.3s ease;
+}
+
+.slider-nav-btn:hover {
+  background: #ffffff;
+  color: var(--primary-red);
+  transform: translateY(-50%) scale(1.12);
+  box-shadow: 0 6px 20px rgba(184, 51, 68, 0.35);
+}
+
+.slider-nav-btn.prev-btn { left: 14px; }
+.slider-nav-btn.next-btn { right: 14px; }
+
+.slider-badge-counter {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  z-index: 10;
+}
+
+.slider-caption-box {
+  text-align: center;
+  padding: 14px 10px 6px;
+}
+
+.slider-caption-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--primary-dark-red);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.slider-caption-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: var(--font-cormorant);
+  font-style: italic;
+}
+
+.slider-thumbnails-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 4px 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-gold) transparent;
+}
+
+.slider-thumbnails-strip::-webkit-scrollbar {
+  height: 5px;
+}
+
+.slider-thumbnails-strip::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 4px;
+}
+
+.thumb-item {
+  flex: 0 0 62px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.5;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.thumb-item:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.thumb-item.active {
+  opacity: 1;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 10px rgba(198, 156, 54, 0.7);
+  transform: scale(1.05);
+}
+
+.thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-divider-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 600px;
+  margin: 30px auto 20px;
+}
+
+.note-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(198, 156, 54, 0.4), transparent);
+}
+
+.note-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent-gold);
 }
 
 /* Bố cục Masonry (Pinterest style): Mỗi ảnh giữ nguyên tỷ lệ tự nhiên, không crop */
@@ -1260,13 +1646,13 @@ html, body {
   overflow: hidden;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
   background: #fdf6f6;
   opacity: 0;
   transform: scale(0.92) translateY(24px);
   transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1),
-              transform 0.8s cubic-bezier(0.19, 1, 0.22, 1),
-              box-shadow 0.4s ease;
+    transform 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 0.4s ease;
   will-change: transform, opacity;
 }
 
@@ -1300,7 +1686,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.22);
+  background: rgba(0, 0, 0, 0.22);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1629,7 +2015,7 @@ html, body {
   text-align: center;
   transform: translateY(20px);
   transition: transform 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .modal-overlay.active .modal-content {
@@ -1692,7 +2078,7 @@ html, body {
 .tab-btn.active {
   background: #fff;
   color: var(--primary-red);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .tab-panel {
@@ -1748,7 +2134,7 @@ html, body {
   margin-left: 6px;
 }
 
-/* Lightbox Modal */
+/* Lightbox Modal with Slider Navigation */
 .lightbox-overlay {
   position: fixed;
   top: 0;
@@ -1756,15 +2142,17 @@ html, body {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  background: rgba(0,0,0,0.92);
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(12px);
   z-index: 1100;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
-  padding: 20px;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  padding: 16px;
+  user-select: none;
 }
 
 .lightbox-overlay.active {
@@ -1772,12 +2160,81 @@ html, body {
   visibility: visible;
 }
 
-.lightbox-overlay img {
-  max-width: 95vw;
+.lightbox-content-box {
+  position: relative;
+  max-width: 92vw;
   max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1150;
+}
+
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 80vh;
+  width: auto;
+  height: auto;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7);
+  transform: scale(0.96);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease;
+}
+
+.lightbox-overlay.active .lightbox-img {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.lightbox-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1200;
+  transition: all 0.25s ease;
+}
+
+.lightbox-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--primary-dark-red);
+  transform: translateY(-50%) scale(1.12);
+}
+
+.lightbox-nav-btn.lb-prev {
+  left: 20px;
+}
+
+.lightbox-nav-btn.lb-next {
+  right: 20px;
+}
+
+.lightbox-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  color: #fff;
+  font-family: var(--font-cormorant);
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+
+.lb-sep {
+  color: var(--accent-gold);
 }
 
 .lightbox-close {
@@ -1789,6 +2246,13 @@ html, body {
   color: #fff;
   font-size: 38px;
   cursor: pointer;
+  z-index: 1250;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.lightbox-close:hover {
+  color: var(--accent-gold);
+  transform: scale(1.15);
 }
 
 /* Toast */
@@ -1816,15 +2280,56 @@ html, body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile Slider & Showcase responsive */
+@media (max-width: 768px) {
+  .hero-slides-wrapper {
+    min-height: 420px;
+  }
+  .showcase-slider-container {
+    padding: 10px;
+    margin-bottom: 24px;
+    border-radius: 12px;
+  }
+  .showcase-main-slider {
+    min-height: 340px;
+  }
+  .slider-stage {
+    height: 360px;
+  }
+  .slider-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .slider-nav-btn.prev-btn { left: 8px; }
+  .slider-nav-btn.next-btn { right: 8px; }
+  .thumb-item {
+    flex: 0 0 54px;
+    height: 70px;
+  }
+  .lightbox-nav-btn {
+    width: 42px;
+    height: 42px;
+  }
+  .lightbox-nav-btn.lb-prev { left: 8px; }
+  .lightbox-nav-btn.lb-next { right: 8px; }
 }
 
 /* ==========================================================================
    RESPONSIVE — THIẾT KẾ CHO MÁY TÍNH (FULL MÀN HÌNH HOÀNG GIA ĐẲNG CẤP)
    ========================================================================== */
 @media (min-width: 769px) {
-  html, body {
+
+  html,
+  body {
     background-color: var(--bg-cream);
   }
 

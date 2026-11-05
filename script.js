@@ -297,10 +297,326 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 8. KHỞI TẠO CÁNH HOA & SAO RƠI
+  // 8. HERO CROSSFADE KEN BURNS SLIDER (ẢNH BÌA)
+  // ==========================================
+  const heroSlider = document.getElementById('heroPhotoSlider');
+  if (heroSlider) {
+    const heroSlides = heroSlider.querySelectorAll('.hero-slide');
+    const heroDots = heroSlider.querySelectorAll('.hero-dot');
+    const heroPrev = document.getElementById('heroPrevBtn');
+    const heroNext = document.getElementById('heroNextBtn');
+    let currentHeroIndex = 0;
+    let heroTimer = null;
+
+    function showHeroSlide(index) {
+      if (index < 0) index = heroSlides.length - 1;
+      if (index >= heroSlides.length) index = 0;
+      currentHeroIndex = index;
+
+      heroSlides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === currentHeroIndex);
+      });
+      heroDots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentHeroIndex);
+      });
+    }
+
+    function nextHeroSlide() {
+      showHeroSlide(currentHeroIndex + 1);
+    }
+
+    function prevHeroSlide() {
+      showHeroSlide(currentHeroIndex - 1);
+    }
+
+    function startHeroTimer() {
+      stopHeroTimer();
+      heroTimer = setInterval(nextHeroSlide, 4500);
+    }
+
+    function stopHeroTimer() {
+      if (heroTimer) clearInterval(heroTimer);
+    }
+
+    if (heroNext) {
+      heroNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nextHeroSlide();
+        startHeroTimer();
+      });
+    }
+
+    if (heroPrev) {
+      heroPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        prevHeroSlide();
+        startHeroTimer();
+      });
+    }
+
+    heroDots.forEach((dot) => {
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(dot.getAttribute('data-index'), 10);
+        showHeroSlide(idx);
+        startHeroTimer();
+      });
+    });
+
+    let heroStartX = 0;
+    heroSlider.addEventListener('touchstart', (e) => {
+      heroStartX = e.changedTouches[0].screenX;
+      stopHeroTimer();
+    }, { passive: true });
+
+    heroSlider.addEventListener('touchend', (e) => {
+      const heroEndX = e.changedTouches[0].screenX;
+      if (heroEndX - heroStartX > 50) {
+        prevHeroSlide();
+      } else if (heroStartX - heroEndX > 50) {
+        nextHeroSlide();
+      }
+      startHeroTimer();
+    }, { passive: true });
+
+    startHeroTimer();
+  }
+
+  // ==========================================
+  // 9. FEATURED SHOWCASE SLIDER (TRÌNH CHIẾU ALBUM CƯỚI NỔI BẬT)
+  // ==========================================
+  const sliderStage = document.getElementById('sliderStage');
+  const sliderThumbnailsStrip = document.getElementById('sliderThumbnailsStrip');
+  const sliderProgressFill = document.getElementById('sliderProgressFill');
+  const sliderPrevBtn = document.getElementById('sliderPrevBtn');
+  const sliderNextBtn = document.getElementById('sliderNextBtn');
+  const sliderBadgeCounter = document.getElementById('sliderBadgeCounter');
+  const sliderCaptionTitle = document.getElementById('sliderCaptionTitle');
+  const sliderCaptionDesc = document.getElementById('sliderCaptionDesc');
+
+  let currentShowcaseIndex = 0;
+  let showcaseTimer = null;
+  const SLIDE_DURATION = 4200;
+
+  if (sliderStage && sliderThumbnailsStrip) {
+    weddingPhotos.forEach((item, index) => {
+      const slideDiv = document.createElement('div');
+      slideDiv.className = `showcase-slide ${index === 0 ? 'active' : ''}`;
+      slideDiv.innerHTML = `<img src="${item.src}" alt="${item.title}" loading="lazy" onclick="openLightbox(${index})">`;
+      sliderStage.appendChild(slideDiv);
+
+      const thumbDiv = document.createElement('div');
+      thumbDiv.className = `thumb-item ${index === 0 ? 'active' : ''}`;
+      thumbDiv.innerHTML = `<img src="${item.src}" alt="${item.title}" loading="lazy">`;
+      thumbDiv.addEventListener('click', () => {
+        showShowcaseSlide(index);
+        resetShowcaseAutoplay();
+      });
+      sliderThumbnailsStrip.appendChild(thumbDiv);
+    });
+
+    function showShowcaseSlide(index) {
+      if (index < 0) index = weddingPhotos.length - 1;
+      if (index >= weddingPhotos.length) index = 0;
+      currentShowcaseIndex = index;
+
+      const slides = sliderStage.querySelectorAll('.showcase-slide');
+      const thumbs = sliderThumbnailsStrip.querySelectorAll('.thumb-item');
+
+      slides.forEach((s, i) => s.classList.toggle('active', i === currentShowcaseIndex));
+      thumbs.forEach((t, i) => {
+        t.classList.toggle('active', i === currentShowcaseIndex);
+        if (i === currentShowcaseIndex) {
+          t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      });
+
+      if (sliderBadgeCounter) {
+        sliderBadgeCounter.textContent = `${String(currentShowcaseIndex + 1).padStart(2, '0')} / ${String(weddingPhotos.length).padStart(2, '0')}`;
+      }
+      if (sliderCaptionTitle) sliderCaptionTitle.textContent = weddingPhotos[currentShowcaseIndex].title;
+      if (sliderCaptionDesc) sliderCaptionDesc.textContent = weddingPhotos[currentShowcaseIndex].desc;
+    }
+
+    function runProgressBar() {
+      if (!sliderProgressFill) return;
+      sliderProgressFill.style.transition = 'none';
+      sliderProgressFill.style.width = '0%';
+      setTimeout(() => {
+        sliderProgressFill.style.transition = `width ${SLIDE_DURATION}ms linear`;
+        sliderProgressFill.style.width = '100%';
+      }, 50);
+    }
+
+    function resetShowcaseAutoplay() {
+      if (showcaseTimer) clearInterval(showcaseTimer);
+      runProgressBar();
+      showcaseTimer = setInterval(() => {
+        showShowcaseSlide(currentShowcaseIndex + 1);
+        runProgressBar();
+      }, SLIDE_DURATION);
+    }
+
+    if (sliderNextBtn) {
+      sliderNextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showShowcaseSlide(currentShowcaseIndex + 1);
+        resetShowcaseAutoplay();
+      });
+    }
+
+    if (sliderPrevBtn) {
+      sliderPrevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showShowcaseSlide(currentShowcaseIndex - 1);
+        resetShowcaseAutoplay();
+      });
+    }
+
+    let scStartX = 0;
+    sliderStage.addEventListener('touchstart', (e) => {
+      scStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    sliderStage.addEventListener('touchend', (e) => {
+      const scEndX = e.changedTouches[0].screenX;
+      if (scEndX - scStartX > 45) {
+        showShowcaseSlide(currentShowcaseIndex - 1);
+        resetShowcaseAutoplay();
+      } else if (scStartX - scEndX > 45) {
+        showShowcaseSlide(currentShowcaseIndex + 1);
+        resetShowcaseAutoplay();
+      }
+    }, { passive: true });
+
+    resetShowcaseAutoplay();
+  }
+
+  // ==========================================
+  // 10. KHỞI TẠO CÁNH HOA & SAO RƠI
   // ==========================================
   initPetalsCanvas();
 });
+
+// DANH SÁCH 14 ẢNH CƯỚI CHÍNH THỨC CÙNG BỘ STUDIO SẮC NÉT
+const weddingPhotos = [
+  { src: 'assets/cover_hero.jpg', title: 'Hạnh Phúc Trọn Vẹn', desc: 'Quang Anh & Diệu Thủy trong trang phục cưới hiện đại lộng lẫy' },
+  { src: 'assets/gallery_kiss.jpg', title: 'Nụ Hôn Ngọt Ngào', desc: 'Khoảnh khắc lãng mạn thiêng liêng dưới làn khăn voan mỏng manh' },
+  { src: 'assets/gallery_3.jpg', title: 'Nụ Cười Rạng Rỡ', desc: 'Tiếng cười rộn rã ngập tràn từng khoảnh khắc chung đôi' },
+  { src: 'assets/story_1.jpg', title: 'Quân Phục & Áo Dài', desc: 'Nét đẹp trang nghiêm của chàng sĩ quan và tà áo dài ren trắng' },
+  { src: 'assets/gallery_walk.jpg', title: 'Sánh Bước Chung Đôi', desc: 'Cùng nhau nắm chặt tay đi qua mọi chặng đường tương lai' },
+  { src: 'assets/story_2.jpg', title: 'Hộp Nhẫn & Hoa Tulip', desc: 'Lời hẹn ước thiêng liêng và chiếc nhẫn cầu hôn ngọt ngào' },
+  { src: 'assets/gallery_5.jpg', title: 'Nét Đẹp Duyên Dáng', desc: 'Cô dâu Diệu Thủy thanh tú trong bộ váy cưới trắng tinh khôi' },
+  { src: 'assets/gallery_7.jpg', title: 'Vòng Tay Ấm Áp', desc: 'Nơi bình yên nhất cuộc đời là trong cái ôm yêu thương của anh' },
+  { src: 'assets/gallery_ring.jpg', title: 'Minh Chứng Tình Yêu', desc: 'Chiếc nhẫn cưới ghi dấu ngày hai trái tim cùng chung một nhịp' },
+  { src: 'assets/gallery_flowers.jpg', title: 'Bó Hoa Hạnh Phúc', desc: 'Bó hoa tươi thắm kết nối tình yêu đôi lứa bền lâu' },
+  { src: 'assets/gallery_dress.jpg', title: 'Váy Cưới Lộng Lẫy', desc: 'Kiêu sa, tinh tế và duyên dáng trong từng đường nét voan lụa' },
+  { src: 'assets/gallery_sunset.jpg', title: 'Ánh Mắt Yêu Thương', desc: 'Tình yêu đong đầy thể hiện trọn vẹn qua ánh mắt ta trao nhau' },
+  { src: 'assets/couple_sitting.jpg', title: 'Góc Vườn Tình Yêu', desc: 'Phút giây thư thái ngọt ngào giữa thiên nhiên ngập sắc xanh' },
+  { src: 'assets/thankyou_photo.jpg', title: 'Lời Cảm Ơn Chân Thành', desc: 'Quang Anh & Diệu Thủy trân trọng đón tiếp quý khách' }
+];
+
+// ==========================================
+// LIGHTBOX MODAL WITH SLIDER & TOUCH CONTROLS
+// ==========================================
+let currentLbIndex = 0;
+
+function openLightbox(param) {
+  const modal = document.getElementById('lightboxModal');
+  const img = document.getElementById('lightboxImg');
+  if (!modal || !img) return;
+
+  if (typeof param === 'number') {
+    currentLbIndex = param;
+  } else if (typeof param === 'string') {
+    const foundIdx = weddingPhotos.findIndex(p => p.src === param);
+    currentLbIndex = foundIdx !== -1 ? foundIdx : 0;
+  }
+
+  updateLightboxContent();
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function updateLightboxContent() {
+  const img = document.getElementById('lightboxImg');
+  const counter = document.getElementById('lightboxCounter');
+  const caption = document.getElementById('lightboxCaption');
+  if (!img) return;
+
+  const currentItem = weddingPhotos[currentLbIndex];
+  img.style.opacity = '0';
+  img.style.transform = 'scale(0.95)';
+
+  setTimeout(() => {
+    img.src = currentItem.src;
+    img.alt = currentItem.title;
+    img.style.opacity = '1';
+    img.style.transform = 'scale(1)';
+  }, 120);
+
+  if (counter) {
+    counter.textContent = `${String(currentLbIndex + 1).padStart(2, '0')} / ${String(weddingPhotos.length).padStart(2, '0')}`;
+  }
+  if (caption) {
+    caption.textContent = currentItem.title;
+  }
+}
+
+function lightboxPrev(e) {
+  if (e) e.stopPropagation();
+  currentLbIndex = (currentLbIndex - 1 + weddingPhotos.length) % weddingPhotos.length;
+  updateLightboxContent();
+}
+
+function lightboxNext(e) {
+  if (e) e.stopPropagation();
+  currentLbIndex = (currentLbIndex + 1) % weddingPhotos.length;
+  updateLightboxContent();
+}
+
+function closeLightbox(e) {
+  if (e && e.target && e.target.closest('.lightbox-content-box') && !e.target.classList.contains('lightbox-close')) {
+    return;
+  }
+  const modal = document.getElementById('lightboxModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+// Bàn phím điều khiển Lightbox
+document.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('lightboxModal');
+  if (!modal || !modal.classList.contains('active')) return;
+
+  if (e.key === 'ArrowLeft') {
+    lightboxPrev();
+  } else if (e.key === 'ArrowRight') {
+    lightboxNext();
+  } else if (e.key === 'Escape') {
+    closeLightbox();
+  }
+});
+
+// Vuốt trên mobile trong Lightbox
+let lbTouchStartX = 0;
+const lbModal = document.getElementById('lightboxModal');
+if (lbModal) {
+  lbModal.addEventListener('touchstart', (e) => {
+    lbTouchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  lbModal.addEventListener('touchend', (e) => {
+    const lbTouchEndX = e.changedTouches[0].screenX;
+    if (lbTouchEndX - lbTouchStartX > 50) {
+      lightboxPrev();
+    } else if (lbTouchStartX - lbTouchEndX > 50) {
+      lightboxNext();
+    }
+  }, { passive: true });
+}
 
 // Tiện ích Sao chép vào clipboard
 function copyToClipboard(text) {
@@ -330,22 +646,6 @@ function showToast(msg) {
   }, 2800);
 }
 
-// Xem ảnh kích thước lớn (Lightbox)
-function openLightbox(src) {
-  const modal = document.getElementById('lightboxModal');
-  const img = document.getElementById('lightboxImg');
-  if (modal && img) {
-    img.src = src;
-    modal.classList.add('active');
-  }
-}
-
-function closeLightbox() {
-  const modal = document.getElementById('lightboxModal');
-  if (modal) {
-    modal.classList.remove('active');
-  }
-}
 
 function escapeHTML(str) {
   return str.replace(/[&<>'"]/g, 
