@@ -80,7 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setTimeout(() => {
         envelopeOverlay.classList.add('opened');
-        checkRevealOnScroll();
+        // Kích hoạt ngay các phần tử trong màn hình đầu tiên
+        document.querySelectorAll('.reveal-on-scroll, .photo-reveal-box, .reveal-slide-left, .reveal-slide-right').forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight) {
+            el.classList.add('active');
+          }
+        });
       }, 850);
     });
   }
@@ -136,22 +142,44 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCountdown();
 
   // ==========================================
-  // 3. HIỆU ỨNG CUỘN (SCROLL REVEAL)
+  // 3. HIỆU ỨNG CUỘN & MỞ RỘNG ẢNH (SCROLL-DRIVEN & EXPAND REVEAL)
   // ==========================================
-  function checkRevealOnScroll() {
-    const elements = document.querySelectorAll('.reveal-on-scroll');
-    const windowHeight = window.innerHeight;
-
-    elements.forEach(el => {
-      const elementTop = el.getBoundingClientRect().top;
-      if (elementTop < windowHeight - 60) {
-        el.classList.add('active');
-      }
+  const animatedSelectors = '.reveal-on-scroll, .photo-reveal-box, .reveal-slide-left, .reveal-slide-right';
+  
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0.12,
+      rootMargin: '0px 0px -30px 0px'
     });
-  }
 
-  window.addEventListener('scroll', checkRevealOnScroll);
-  window.addEventListener('resize', checkRevealOnScroll);
+    document.querySelectorAll(animatedSelectors).forEach(el => {
+      observer.observe(el);
+    });
+  } else {
+    function checkRevealOnScroll() {
+      const elements = document.querySelectorAll(animatedSelectors);
+      const windowHeight = window.innerHeight;
+
+      elements.forEach(el => {
+        const elementTop = el.getBoundingClientRect().top;
+        if (elementTop < windowHeight - 40) {
+          el.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkRevealOnScroll, { passive: true });
+    window.addEventListener('resize', checkRevealOnScroll, { passive: true });
+    checkRevealOnScroll();
+  }
 
   // ==========================================
   // 4. FORM XÁC NHẬN THAM DỰ (RSVP)

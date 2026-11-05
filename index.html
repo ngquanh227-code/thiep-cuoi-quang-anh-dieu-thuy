@@ -20,7 +20,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Thiệp Cưới">
-  <link rel="stylesheet" href="style.css?v=20261105_05">
+  <link rel="stylesheet" href="style.css?v=20261105_06">
 </head>
 <body>
 
@@ -117,13 +117,13 @@
           </div>
         </div>
 
-        <div class="hero-photo-frame">
+        <div class="hero-photo-frame photo-reveal-box">
           <div class="corner-ornament tl"></div>
           <div class="corner-ornament tr"></div>
           <div class="corner-ornament bl"></div>
           <div class="corner-ornament br"></div>
           
-          <img src="assets/cover_hero.jpg" alt="Cô dâu Đoàn Diệu Thủy và Chú rể Quang Anh" class="hero-img">
+          <img src="assets/cover_hero.jpg" alt="Quang Anh & Diệu Thủy" class="hero-img">
           
           <div class="photo-floating-tag">
             <span>SAVE OUR DATE</span>
@@ -171,8 +171,8 @@
         </div>
 
         <!-- Ảnh đôi lãng mạn -->
-        <div class="couple-middle-photo">
-          <img src="assets/couple_sitting.jpg" alt="Khoảnh khắc Quang Anh & Đoàn Diệu Thủy" class="rounded-img">
+        <div class="couple-middle-photo photo-reveal-box">
+          <img src="assets/couple_sitting.jpg" alt="Khoảnh khắc ngọt ngào của Quang Anh & Diệu Thủy" class="rounded-img">
         </div>
       </section>
 
@@ -307,23 +307,27 @@
         <h2 class="section-title">Câu Chuyện Tình Yêu</h2>
         
         <div class="timeline-container">
-          <div class="timeline-item left">
+          <div class="timeline-item left reveal-slide-left">
             <div class="timeline-dot"></div>
-            <div class="timeline-card">
+            <div class="timeline-card photo-reveal-box">
               <span class="timeline-year">Mùa Thu 2022</span>
               <h4 class="timeline-heading">Lần Đầu Chạm Ánh Mắt</h4>
               <p>Một buổi chiều Hà Nội se lạnh bên hồ Gươm, ánh mắt ta vô tình gặp gỡ và câu chuyện ngọt ngào bắt đầu...</p>
-              <img src="assets/story_1.jpg" alt="Lần đầu gặp gỡ" class="timeline-img">
+              <div class="timeline-img-wrap">
+                <img src="assets/story_1.jpg" alt="Lần đầu gặp gỡ - Quân phục và Áo dài truyền thống" class="timeline-img">
+              </div>
             </div>
           </div>
 
-          <div class="timeline-item right">
+          <div class="timeline-item right reveal-slide-right">
             <div class="timeline-dot"></div>
-            <div class="timeline-card">
+            <div class="timeline-card photo-reveal-box">
               <span class="timeline-year">Mùa Đông 2024</span>
               <h4 class="timeline-heading">Lời Cầu Hôn Lãng Mạn</h4>
               <p>Dưới ánh hoàng hôn rực rỡ, chiếc nhẫn đã được trao cùng lời hẹn ước đi cùng nhau đến hết cuộc đời.</p>
-              <img src="assets/story_2.jpg" alt="Lời cầu hôn" class="timeline-img">
+              <div class="timeline-img-wrap">
+                <img src="assets/story_2.jpg" alt="Lời cầu hôn lãng mạn" class="timeline-img">
+              </div>
             </div>
           </div>
         </div>
@@ -336,44 +340,60 @@
         <p class="gallery-subtitle">Chạm vào bất kỳ ảnh nào để xem ở chế độ toàn màn hình</p>
         
         <div class="gallery-grid">
-          <div class="gallery-item large" onclick="openLightbox('assets/cover_hero.jpg')">
-            <img src="assets/cover_hero.jpg" alt="Quang Anh & Đoàn Diệu Thủy" loading="lazy">
+          <div class="gallery-item large" style="--order: 0;" onclick="openLightbox('assets/cover_hero.jpg')">
+            <img src="assets/cover_hero.jpg" alt="Quang Anh & Diệu Thủy" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item" onclick="openLightbox('assets/gallery_kiss.jpg')">
-            <img src="assets/gallery_kiss.jpg" alt="Nụ hôn ngọt ngào" loading="lazy">
+          <div class="gallery-item" style="--order: 1;" onclick="openLightbox('assets/gallery_kiss.jpg')">
+            <img src="assets/gallery_kiss.jpg" alt="Nụ hôn ngọt ngào dưới khăn voan" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item" onclick="openLightbox('assets/gallery_walk.jpg')">
-            <img src="assets/gallery_walk.jpg" alt="Cùng nhau bước đi" loading="lazy">
+          <div class="gallery-item" style="--order: 2;" onclick="openLightbox('assets/gallery_3.jpg')">
+            <img src="assets/gallery_3.jpg" alt="Nụ cười hạnh phúc rạng ngời" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item" onclick="openLightbox('assets/gallery_dance.jpg')">
-            <img src="assets/gallery_dance.jpg" alt="Điệu khiêu vũ" loading="lazy">
+          <div class="gallery-item" style="--order: 3;" onclick="openLightbox('assets/story_1.jpg')">
+            <img src="assets/story_1.jpg" alt="Quân phục & Áo dài truyền thống" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item" onclick="openLightbox('assets/gallery_ring.jpg')">
-            <img src="assets/gallery_ring.jpg" alt="Nhẫn cưới vĩnh cửu" loading="lazy">
+          <div class="gallery-item" style="--order: 4;" onclick="openLightbox('assets/gallery_walk.jpg')">
+            <img src="assets/gallery_walk.jpg" alt="Cùng nhau bước đi trọn đời" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item" onclick="openLightbox('assets/gallery_flowers.jpg')">
-            <img src="assets/gallery_flowers.jpg" alt="Bó hoa cầm tay cô dâu" loading="lazy">
+          <div class="gallery-item" style="--order: 5;" onclick="openLightbox('assets/story_2.jpg')">
+            <img src="assets/story_2.jpg" alt="Hộp nhẫn và bó hoa tulip trắng" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item" onclick="openLightbox('assets/gallery_dress.jpg')">
-            <img src="assets/gallery_dress.jpg" alt="Váy cưới kiêu sa" loading="lazy">
+          <div class="gallery-item" style="--order: 6;" onclick="openLightbox('assets/gallery_5.jpg')">
+            <img src="assets/gallery_5.jpg" alt="Cô dâu Diệu Thủy duyên dáng" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item large" onclick="openLightbox('assets/gallery_sunset.jpg')">
-            <img src="assets/gallery_sunset.jpg" alt="Hoàng hôn lãng mạn" loading="lazy">
+          <div class="gallery-item" style="--order: 7;" onclick="openLightbox('assets/gallery_7.jpg')">
+            <img src="assets/gallery_7.jpg" alt="Vòng tay ấm áp bình yên" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item" onclick="openLightbox('assets/gallery_hands.jpg')">
-            <img src="assets/gallery_hands.jpg" alt="Nắm tay nhau" loading="lazy">
+          <div class="gallery-item" style="--order: 8;" onclick="openLightbox('assets/gallery_ring.jpg')">
+            <img src="assets/gallery_ring.jpg" alt="Nhẫn cưới minh chứng tình yêu" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
-          <div class="gallery-item" onclick="openLightbox('assets/couple_sitting.jpg')">
-            <img src="assets/couple_sitting.jpg" alt="Nụ cười hạnh phúc" loading="lazy">
+          <div class="gallery-item" style="--order: 9;" onclick="openLightbox('assets/gallery_flowers.jpg')">
+            <img src="assets/gallery_flowers.jpg" alt="Sánh bước bên nhau hạnh phúc" loading="lazy">
+            <div class="item-overlay"><span class="view-icon">🔍</span></div>
+          </div>
+          <div class="gallery-item" style="--order: 10;" onclick="openLightbox('assets/gallery_dress.jpg')">
+            <img src="assets/gallery_dress.jpg" alt="Váy cưới kiêu sa lộng lẫy" loading="lazy">
+            <div class="item-overlay"><span class="view-icon">🔍</span></div>
+          </div>
+          <div class="gallery-item large" style="--order: 11;" onclick="openLightbox('assets/gallery_sunset.jpg')">
+            <img src="assets/gallery_sunset.jpg" alt="Ánh mắt trao nhau ngọt ngào" loading="lazy">
+            <div class="item-overlay"><span class="view-icon">🔍</span></div>
+          </div>
+          <div class="gallery-item" style="--order: 12;" onclick="openLightbox('assets/couple_sitting.jpg')">
+            <img src="assets/couple_sitting.jpg" alt="Góc vườn tình yêu xanh mát" loading="lazy">
+            <div class="item-overlay"><span class="view-icon">🔍</span></div>
+          </div>
+          <div class="gallery-item" style="--order: 13;" onclick="openLightbox('assets/thankyou_photo.jpg')">
+            <img src="assets/thankyou_photo.jpg" alt="Lời cảm ơn chân thành từ Quang Anh & Diệu Thủy" loading="lazy">
             <div class="item-overlay"><span class="view-icon">🔍</span></div>
           </div>
         </div>
@@ -429,7 +449,7 @@
             </div>
 
             <div class="form-group">
-              <label for="guestWishes">Lời chúc gửi tới Quang Anh & Đoàn Diệu Thủy</label>
+              <label for="guestWishes">Lời chúc gửi tới Quang Anh & Diệu Thủy</label>
               <textarea id="guestWishes" rows="3" placeholder="Gửi những lời chúc phúc ngọt ngào nhất..."></textarea>
             </div>
 
@@ -447,7 +467,7 @@
                   <strong>Trần Minh Hiếu</strong>
                   <span class="wish-time">Bạn Chú Rể • Vừa xong</span>
                 </div>
-                <p class="wish-content">Chúc Quang Anh và Đoàn Diệu Thủy trăm năm tình viên mãn, đầu bạc răng long, mãi mãi ngọt ngào như ngày đầu nhé! Hẹn gặp ở Trống Đồng Palace!</p>
+                <p class="wish-content">Chúc Quang Anh và Diệu Thủy trăm năm tình viên mãn, đầu bạc răng long, mãi mãi ngọt ngào như ngày đầu nhé! Hẹn gặp ở Trống Đồng Palace!</p>
               </div>
               <div class="wish-item">
                 <div class="wish-author">
@@ -467,7 +487,7 @@
           <div class="section-tag">GỬI GẮM TÌNH CẢM</div>
           <h2 class="section-title">Hộp Mừng Cưới</h2>
           <p class="gift-subtitle">
-            Nếu ở xa hoặc không thể trực tiếp đến chung vui, quý khách có thể gửi lời chúc và món quà mừng đến Quang Anh & Đoàn Diệu Thủy tại đây:
+            Nếu ở xa hoặc không thể trực tiếp đến chung vui, quý khách có thể gửi lời chúc và món quà mừng đến Quang Anh & Diệu Thủy tại đây:
           </p>
 
           <button class="btn btn-gift-open" id="showQrBtn">
@@ -486,8 +506,8 @@
       <!-- SECTION 8: LỜI CẢM ƠN (THANK YOU FOOTER) -->
       <section class="section thank-you-section reveal-on-scroll">
         <div class="thank-you-card">
-          <div class="thankyou-photo-box">
-            <img src="assets/thankyou_photo.jpg" alt="Quang Anh và Đoàn Diệu Thủy cảm ơn" class="thankyou-img">
+          <div class="thankyou-photo-box photo-reveal-box">
+            <img src="assets/thankyou_photo.jpg" alt="Quang Anh và Diệu Thủy cảm ơn" class="thankyou-img">
           </div>
           <div class="thank-calligraphy">Thank You!</div>
           <p class="thank-message">
@@ -495,14 +515,14 @@
           </p>
           <div class="final-sign">
             <span>Rất hân hạnh được đón tiếp!</span>
-            <div class="signature">Quang Anh & Đoàn Diệu Thủy</div>
+            <div class="signature">Quang Anh & Diệu Thủy</div>
           </div>
         </div>
       </section>
 
       <!-- FOOTER -->
       <footer class="site-footer">
-        <p>Thiết kế thiệp cưới điện tử hiện đại • Quang Anh & Đoàn Diệu Thủy 2026</p>
+        <p>Thiết kế thiệp cưới điện tử hiện đại • Quang Anh & Diệu Thủy 2026</p>
       </footer>
     </main>
   </div>
@@ -567,6 +587,6 @@
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast">Đã sao chép vào bộ nhớ tạm!</div>
 
-  <script src="script.js?v=20261105_05"></script>
+  <script src="script.js?v=20261105_06"></script>
 </body>
 </html>
