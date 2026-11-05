@@ -1,6 +1,6 @@
 /* ==========================================================================
-   THIỆP CƯỚI ONLINE - QUANG ANH & ĐOÀN DIỆU THỦY
-   Tối ưu hóa: Full Màn Hình Desktop & Web App Mobile
+   THIỆP CƯỚI ONLINE - QUANG ANH & DIỆU THỦY
+   Tối ưu: Full Màn Hình Máy Tính & Web App Điện Thoại (Zero Crop Đầu Ảnh)
    ========================================================================== */
 
 :root {
@@ -9,7 +9,7 @@
   --secondary-burgundy: #520810;
   --accent-gold: #c69c36;
   --accent-gold-light: #ebd69b;
-  --accent-gold-glow: rgba(198, 156, 54, 0.4);
+  --accent-gold-glow: rgba(198, 156, 54, 0.35);
   --soft-rose: #fdf6f6;
   --bg-cream: #faf7f2;
   --card-white: #ffffff;
@@ -19,7 +19,7 @@
   --border-light: rgba(198, 156, 54, 0.3);
   --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 10px 28px rgba(161, 24, 36, 0.09);
-  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.16);
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-script: 'Alex Brush', cursive;
   --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -73,7 +73,7 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.22);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -203,14 +203,14 @@ html, body {
 
 .preview-names {
   font-family: var(--font-serif);
-  font-size: 26px;
+  font-size: 28px;
   color: #fff;
   font-weight: 500;
 }
 
 .preview-names span {
   font-family: var(--font-script);
-  font-size: 32px;
+  font-size: 34px;
   color: var(--accent-gold-light);
   margin: 0 4px;
 }
@@ -271,7 +271,7 @@ html, body {
 
 .sneak-names {
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--primary-dark-red);
   font-weight: 600;
   margin: 6px 0 2px;
@@ -344,7 +344,6 @@ html, body {
   z-index: 1;
 }
 
-/* Wax Seal Button */
 .wax-seal {
   position: absolute;
   top: 95px;
@@ -419,19 +418,24 @@ html, body {
 }
 
 /* =========================================
-   FULL SCREEN MAIN CONTAINER & SECTIONS
+   THIỆP CƯỚI FULL SCREEN (MÁY TÍNH & ĐIỆN THOẠI)
    ========================================= */
 .phone-frame {
   width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
   min-height: 100dvh;
   background-color: var(--bg-cream);
   position: relative;
   overflow-x: hidden;
+  box-shadow: none;
 }
 
 .wedding-card {
   width: 100%;
+  max-width: 100%;
   background: var(--bg-cream);
   padding-bottom: 40px;
 }
@@ -452,7 +456,7 @@ html, body {
 .top-bar {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
-  padding: 12px 20px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -490,14 +494,15 @@ html, body {
 
 /* Section Shared */
 .section {
-  padding: 40px 20px;
+  padding: 45px 20px;
   text-align: center;
   position: relative;
+  width: 100%;
 }
 
 .section-tag {
   display: inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 3px;
   color: var(--accent-gold);
@@ -515,7 +520,7 @@ html, body {
 }
 
 /* =========================================
-   SECTION 1: HERO
+   SECTION 1: HERO (KHÔNG CẮT ĐẦU ẢNH)
    ========================================= */
 .hero-section {
   padding-top: 30px;
@@ -618,28 +623,24 @@ html, body {
   margin-top: 6px;
 }
 
-/* Elegant Photo Frame - HEADS PRESERVED 100% */
+/* Hero Frame - Natural Aspect Ratio: 100% Giữ đầu mặt cô dâu chú rể */
 .hero-photo-frame {
   position: relative;
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
   margin: 0 auto;
   padding: 10px;
   background: #fff;
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-md);
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .hero-img {
   width: 100%;
   height: auto;
-  aspect-ratio: 3 / 4;
-  max-height: 520px;
-  object-fit: cover;
-  object-position: top center; /* Giữ trọn vẹn đầu và khuôn mặt */
-  border-radius: 4px;
   display: block;
+  border-radius: 4px;
 }
 
 .corner-ornament {
@@ -657,7 +658,7 @@ html, body {
 
 .photo-floating-tag {
   position: absolute;
-  bottom: 22px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.95);
@@ -700,7 +701,7 @@ html, body {
   padding: 24px 20px;
   border-radius: 12px;
   border: 1px dashed rgba(161, 24, 36, 0.25);
-  max-width: 720px;
+  max-width: 820px;
   margin: 0 auto 30px;
 }
 
@@ -781,20 +782,16 @@ html, body {
 }
 
 .couple-middle-photo {
-  max-width: 520px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
 .rounded-img {
   width: 100%;
-  max-width: 520px;
   height: auto;
-  aspect-ratio: 16 / 11;
-  object-fit: cover;
-  object-position: top center; /* Giữ trọn đầu cô dâu chú rể */
+  display: block;
   border-radius: 12px;
   box-shadow: var(--shadow-md);
-  display: block;
   margin: 0 auto;
 }
 
@@ -1081,7 +1078,7 @@ html, body {
 }
 
 /* =========================================
-   SECTION 4: TIMELINE / STORY
+   SECTION 4: TIMELINE (ZERO CROP ĐẦU ẢNH)
    ========================================= */
 .story-section {
   background: #ffffff;
@@ -1089,7 +1086,7 @@ html, body {
 
 .timeline-container {
   position: relative;
-  max-width: 520px;
+  max-width: 680px;
   margin: 0 auto;
   padding: 10px 0;
 }
@@ -1106,8 +1103,8 @@ html, body {
 
 .timeline-item {
   position: relative;
-  margin-bottom: 25px;
-  padding-left: 45px;
+  margin-bottom: 30px;
+  padding-left: 48px;
   text-align: left;
 }
 
@@ -1126,8 +1123,8 @@ html, body {
 
 .timeline-card {
   background: var(--soft-rose);
-  padding: 16px;
-  border-radius: 10px;
+  padding: 18px;
+  border-radius: 12px;
   border-left: 3px solid var(--accent-gold);
   box-shadow: var(--shadow-sm);
 }
@@ -1142,78 +1139,72 @@ html, body {
 
 .timeline-heading {
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 18px;
   color: var(--primary-dark-red);
   font-weight: 600;
   margin: 4px 0 6px;
 }
 
 .timeline-card p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 10px;
+  line-height: 1.6;
+  margin-bottom: 12px;
 }
 
+/* KHÔNG CẮT ĐẦU: Giữ tỷ lệ tự nhiên 100% của ảnh */
 .timeline-img {
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 11;
-  max-height: 240px;
-  object-fit: cover;
-  object-position: top center; /* Giữ trọn vẹn đầu cô dâu chú rể */
-  border-radius: 6px;
   display: block;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 
 /* =========================================
-   SECTION 5: GALLERY
+   SECTION 5: GALLERY MASONRY (KHÔNG CẮT ĐẦU BẤT KỲ ẢNH NÀO)
    ========================================= */
 .gallery-section {
   background: #fffaf7;
 }
 
 .gallery-subtitle {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
   margin-top: -16px;
   margin-bottom: 24px;
 }
 
+/* Bố cục Masonry (Pinterest style): Mỗi ảnh giữ nguyên tỷ lệ tự nhiên, không crop */
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  max-width: 1100px;
+  column-count: 2;
+  column-gap: 12px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .gallery-item {
-  position: relative;
+  break-inside: avoid;
+  margin-bottom: 12px;
+  border-radius: 10px;
   overflow: hidden;
-  border-radius: 8px;
+  position: relative;
   cursor: pointer;
-  aspect-ratio: 1;
   box-shadow: var(--shadow-sm);
-  background: #eee;
+  background: #fdf6f6;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.gallery-item.large {
-  grid-column: span 2;
-  aspect-ratio: 16 / 11;
+.gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
 .gallery-item img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center; /* Giữ trọn khuôn mặt */
-  transition: transform 0.45s ease;
+  height: auto;
   display: block;
-}
-
-.gallery-item:hover img {
-  transform: scale(1.06);
+  border-radius: 10px;
 }
 
 .item-overlay {
@@ -1222,7 +1213,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.22);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1235,7 +1226,7 @@ html, body {
 }
 
 .view-icon {
-  font-size: 24px;
+  font-size: 26px;
 }
 
 /* =========================================
@@ -1248,7 +1239,7 @@ html, body {
 .rsvp-card {
   background: #ffffff;
   border-radius: 14px;
-  padding: 28px 20px;
+  padding: 30px 22px;
   box-shadow: var(--shadow-md);
   border: 1px solid #f2dede;
   max-width: 820px;
@@ -1460,19 +1451,16 @@ html, body {
 
 .thankyou-photo-box {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   margin: 0 auto 24px;
 }
 
 .thankyou-img {
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  object-position: top center; /* Giữ trọn khuôn mặt */
+  display: block;
   border-radius: 12px;
   box-shadow: var(--shadow-md);
-  display: block;
   margin: 0 auto;
 }
 
@@ -1746,27 +1734,15 @@ html, body {
 }
 
 /* ==========================================================================
-   RESPONSIVE — THIẾT KẾ CHO MÁY TÍNH (FULL MÀN HÌNH ĐẲNG CẤP)
+   RESPONSIVE — THIẾT KẾ CHO MÁY TÍNH (FULL MÀN HÌNH HOÀNG GIA ĐẲNG CẤP)
    ========================================================================== */
 @media (min-width: 769px) {
   html, body {
     background-color: var(--bg-cream);
   }
 
-  .phone-frame {
-    max-width: 100%;
-    width: 100%;
-    margin: 0;
-    box-shadow: none;
-    border-radius: 0;
-  }
-
-  .wedding-card {
-    max-width: 100%;
-  }
-
   .top-bar {
-    padding: 16px 60px;
+    padding: 16px 80px;
   }
 
   .top-nav-title {
@@ -1776,24 +1752,24 @@ html, body {
 
   .section {
     padding: 70px 40px;
-    max-width: 1180px;
+    max-width: 1200px;
     margin: 0 auto;
   }
 
   .section-title {
     font-size: 36px;
-    margin-bottom: 32px;
+    margin-bottom: 34px;
   }
 
-  /* Hero 2 cột sang trọng trên màn hình lớn */
+  /* Hero 2 cột sang trọng trên máy tính */
   .hero-section {
     display: flex;
     align-items: center;
     justify-content: space-between;
     text-align: left;
-    gap: 50px;
-    padding: 60px 40px 70px;
-    max-width: 1180px;
+    gap: 60px;
+    padding: 70px 40px;
+    max-width: 1200px;
     margin: 0 auto;
   }
 
@@ -1806,19 +1782,19 @@ html, body {
   }
 
   .script-subtitle {
-    font-size: 40px;
+    font-size: 42px;
   }
 
   .couple-names {
-    font-size: 44px;
+    font-size: 48px;
   }
 
   .couple-names span {
-    font-size: 50px;
+    font-size: 54px;
   }
 
   .gold-divider {
-    margin: 18px 0;
+    margin: 20px 0;
   }
 
   .date-highlight {
@@ -1827,13 +1803,8 @@ html, body {
 
   .hero-photo-frame {
     flex: 0.9;
-    max-width: 440px;
+    max-width: 460px;
     margin: 0;
-  }
-
-  .hero-img {
-    aspect-ratio: 3 / 4;
-    max-height: 540px;
   }
 
   .quote-box {
@@ -1850,8 +1821,8 @@ html, body {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    padding: 36px 40px;
-    max-width: 900px;
+    padding: 40px;
+    max-width: 960px;
   }
 
   .family-side {
@@ -1863,17 +1834,13 @@ html, body {
   }
 
   .couple-middle-photo {
-    max-width: 680px;
+    max-width: 780px;
   }
 
-  .rounded-img {
-    max-width: 680px;
-  }
-
-  /* Event details */
+  /* Event Details */
   .event-card-box {
-    max-width: 900px;
-    padding: 36px 40px;
+    max-width: 960px;
+    padding: 40px;
   }
 
   .calendar-display {
@@ -1881,55 +1848,46 @@ html, body {
   }
 
   .center-col .cal-day-big {
-    font-size: 56px;
+    font-size: 58px;
   }
 
   .mini-calendar-wrapper {
-    max-width: 480px;
+    max-width: 500px;
   }
 
   .countdown-container {
-    max-width: 700px;
-    padding: 36px 30px;
+    max-width: 760px;
+    padding: 38px 30px;
   }
 
   .countdown-box {
-    min-width: 80px;
-    padding: 14px 12px;
+    min-width: 86px;
+    padding: 16px 14px;
   }
 
   .cd-num {
-    font-size: 42px;
+    font-size: 44px;
   }
 
-  /* Gallery 4 cột tuyệt đẹp trên màn hình lớn */
+  /* Gallery Masonry 3 cột trên tablet, 4 cột trên desktop rộng */
   .gallery-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-
-  .gallery-item.large {
-    grid-column: span 2;
-    aspect-ratio: 16 / 11;
+    column-count: 3;
+    column-gap: 16px;
   }
 
   /* Timeline */
   .timeline-container {
-    max-width: 720px;
+    max-width: 800px;
   }
 
   .timeline-card {
-    padding: 22px;
-  }
-
-  .timeline-img {
-    max-height: 320px;
+    padding: 24px;
   }
 
   /* RSVP Card */
   .rsvp-card {
-    max-width: 800px;
-    padding: 40px;
+    max-width: 880px;
+    padding: 44px;
   }
 
   .radio-options {
@@ -1943,8 +1901,8 @@ html, body {
 
   /* Modal */
   .modal-content {
-    max-width: 460px;
-    padding: 32px 28px;
+    max-width: 480px;
+    padding: 34px 30px;
   }
 
   .qr-img {
@@ -1958,5 +1916,12 @@ html, body {
     right: 32px;
     width: 60px;
     height: 60px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .gallery-grid {
+    column-count: 4;
+    column-gap: 18px;
   }
 }

@@ -1,127 +1,73 @@
 // ==========================================
 // WEDDING CARD INTERACTIVE SCRIPT
-// Quang Anh & Đoàn Diệu Thủy - 10/12/2026
+// Quang Anh & Diệu Thủy - 10/12/2026
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
-  // 1. HỆ THỐNG NHẠC "MỘT ĐỜI" PHÁT LIÊN TỤC KHÔNG NGẮT
-  //    Sử dụng Web Audio API AudioBufferSourceNode với loop = true
-  //    đảm bảo phát liền mạch chuẩn xác từng mili-giây!
+  // 1. PHÁT BÀI HÁT "MỘT ĐỜI" LIÊN TỤC KHÔNG BỊ NGẮT
   // ==========================================
   const openCardBtn = document.getElementById('openCardBtn');
   const envelopeBox = document.getElementById('envelopeBox');
   const envelopeOverlay = document.getElementById('envelopeOverlay');
+  const bgAudio = document.getElementById('bgAudio');
   const musicToggleBtn = document.getElementById('musicToggleBtn');
   const musicDisk = musicToggleBtn ? musicToggleBtn.querySelector('.music-disk') : null;
-  const bgAudioFallback = document.getElementById('bgAudio');
 
-  let audioCtx = null;
-  let audioBuffer = null;
-  let sourceNode = null;
-  let gainNode = null;
-  let isPlaying = false;
-  let pauseTime = 0;
-  let startTime = 0;
-
-  function initWebAudio() {
-    try {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioContextClass) {
-        audioCtx = new AudioContextClass();
-        fetch('assets/mot_doi.mp3')
-          .then(res => res.arrayBuffer())
-          .then(buf => audioCtx.decodeAudioData(buf))
-          .then(decoded => {
-            audioBuffer = decoded;
-            // Nếu người dùng đã mở thiệp trước khi decode xong, tự động kích hoạt
-            if (isPlaying && !sourceNode) {
-              startWebAudioPlayback(0);
-            }
-          })
-          .catch(e => {
-            console.log('Web Audio fetch error, fallback to HTML Audio:', e);
-          });
-      }
-    } catch (e) {
-      console.log('Web Audio not supported:', e);
-    }
-  }
-
-  function startWebAudioPlayback(offset = 0) {
-    if (!audioCtx || !audioBuffer) return false;
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-    try {
-      if (sourceNode) {
-        sourceNode.stop();
-        sourceNode.disconnect();
-      }
-    } catch (e) {}
-
-    sourceNode = audioCtx.createBufferSource();
-    sourceNode.buffer = audioBuffer;
-    sourceNode.loop = true; // Hard real-time hardware sample-accurate seamless looping!
-
-    gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
-
-    sourceNode.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    const safeOffset = offset % audioBuffer.duration;
-    sourceNode.start(0, safeOffset);
-    startTime = audioCtx.currentTime - safeOffset;
-    return true;
-  }
+  let isMusicPlaying = false;
 
   function playMusic() {
-    isPlaying = true;
-    if (musicDisk) musicDisk.classList.add('rotating');
-
-    // Ưu tiên Web Audio API (hoàn toàn không ngắt quãng giữa các vòng lặp)
-    const success = startWebAudioPlayback(pauseTime);
-    if (!success) {
-      // Fallback HTML5 Audio nếu Web Audio chưa decode xong
-      if (bgAudioFallback) {
-        bgAudioFallback.play().catch(() => {});
-      }
+    if (!bgAudio) return;
+    bgAudio.volume = 1.0;
+    const promise = bgAudio.play();
+    if (promise !== undefined) {
+      promise.then(() => {
+        isMusicPlaying = true;
+        if (musicDisk) musicDisk.classList.add('rotating');
+      }).catch(err => {
+        console.log('Audio autoplay prevented, will wait for user touch:', err);
+      });
     }
   }
 
   function pauseMusic() {
-    isPlaying = false;
+    if (!bgAudio) return;
+    bgAudio.pause();
+    isMusicPlaying = false;
     if (musicDisk) musicDisk.classList.remove('rotating');
-
-    if (sourceNode && audioCtx) {
-      pauseTime = (audioCtx.currentTime - startTime) % (audioBuffer ? audioBuffer.duration : 1);
-      try {
-        sourceNode.stop();
-        sourceNode.disconnect();
-      } catch (e) {}
-      sourceNode = null;
-    }
-    if (bgAudioFallback) {
-      bgAudioFallback.pause();
-    }
   }
 
   function toggleMusic() {
-    if (isPlaying) {
+    if (isMusicPlaying) {
       pauseMusic();
     } else {
       playMusic();
     }
   }
 
-  // Khởi tạo audio context khi load trang
-  initWebAudio();
+  // Seamless continuous loop - loại bỏ khoảng lặng cuối bài MP3
+  if (bgAudio) {
+    bgAudio.addEventListener('timeupdate', () => {
+      // Khi gần hết bài (còn 0.25s), quay lại đầu ngay để nhạc không bị ngắt
+      if (bgAudio.duration && bgAudio.currentTime >= bgAudio.duration - 0.25) {
+        bgAudio.currentTime = 0;
+        bgAudio.play().catch(() => {});
+      }
+    });
 
-  // Mở phong bì thư 3D & Chuyển sang chế độ Web App
+    bgAudio.addEventListener('ended', () => {
+      bgAudio.currentTime = 0;
+      bgAudio.play().catch(() => {});
+    });
+  }
+
+  // Mở phong bì thư 3D & Kích hoạt âm nhạc + chế độ Web App
   if (openCardBtn) {
     openCardBtn.addEventListener('click', () => {
-      // Chế độ full màn hình web app trên điện thoại
+      // Phát nhạc ngay khi chạm con dấu
+      playMusic();
+
+      // Fullscreen trên điện thoại (trải nghiệm như webapp)
       if (window.innerWidth <= 768) {
         const docEl = document.documentElement;
         const reqFs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
@@ -131,22 +77,30 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       envelopeBox.classList.add('open');
-      playMusic();
 
       setTimeout(() => {
         envelopeOverlay.classList.add('opened');
-        // Kích hoạt animation khi bắt đầu cuộn
         checkRevealOnScroll();
-      }, 900);
+      }, 850);
     });
   }
 
+  // Chạm bất kỳ đâu trên trang để kích hoạt phát nhạc nếu trình duyệt từng chặn
+  document.addEventListener('click', () => {
+    if (!isMusicPlaying && envelopeOverlay && envelopeOverlay.classList.contains('opened')) {
+      playMusic();
+    }
+  }, { once: true });
+
   if (musicToggleBtn) {
-    musicToggleBtn.addEventListener('click', toggleMusic);
+    musicToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMusic();
+    });
   }
 
   // ==========================================
-  // 2. BỘ ĐẾM NGƯỢC CHÍNH XÁC ĐẾN NGÀY CƯỚI
+  // 2. BỘ ĐẾM NGƯỢC CHÍNH XÁC ĐẾN NGÀY CƯỚI: 10/12/2026 17:30
   // ==========================================
   const weddingDate = new Date(2026, 11, 10, 17, 30, 0).getTime();
 
@@ -182,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCountdown();
 
   // ==========================================
-  // 3. HIỆU ỨNG SCROLL REVEAL
+  // 3. HIỆU ỨNG CUỘN (SCROLL REVEAL)
   // ==========================================
   function checkRevealOnScroll() {
     const elements = document.querySelectorAll('.reveal-on-scroll');
@@ -222,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <strong>${escapeHTML(name)}</strong>
           <span class="wish-time">${escapeHTML(side)} • Vừa xong</span>
         </div>
-        <p class="wish-content">${wishes ? escapeHTML(wishes) : (attend === 'yes' ? 'Rất vui và hạnh phúc khi được đến chung vui cùng Quang Anh & Đoàn Diệu Thủy! ❤️' : 'Gửi lời chúc mừng trăm năm hạnh phúc đến hai bạn!')}</p>
+        <p class="wish-content">${wishes ? escapeHTML(wishes) : (attend === 'yes' ? 'Rất vui và hạnh phúc khi được đến chung vui cùng Quang Anh & Diệu Thủy! ❤️' : 'Gửi lời chúc mừng trăm năm hạnh phúc đến hai bạn!')}</p>
       `;
 
       if (wishesList) {
@@ -287,8 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const addCalendarBtn = document.getElementById('addCalendarBtn');
   if (addCalendarBtn) {
     addCalendarBtn.addEventListener('click', () => {
-      const title = encodeURIComponent("Lễ Thành Hôn - Quang Anh & Đoàn Diệu Thủy");
-      const details = encodeURIComponent("Trân trọng kính mời quý khách tham dự lễ thành hôn của Quang Anh & Đoàn Diệu Thủy tại Trống Đồng Palace, Hà Nội.");
+      const title = encodeURIComponent("Lễ Thành Hôn - Quang Anh & Diệu Thủy");
+      const details = encodeURIComponent("Trân trọng kính mời quý khách tham dự lễ thành hôn của Quang Anh & Đoàn Diệu Thủy tại Trống Đồng Palace, 65 Quán Sứ, Hoàn Kiếm, Hà Nội.");
       const location = encodeURIComponent("Trống Đồng Palace, 65 Quán Sứ, Hoàn Kiếm, Hà Nội");
       const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20261210T103000Z/20261210T143000Z&details=${details}&location=${location}`;
       window.open(gcalUrl, '_blank');
@@ -303,10 +257,10 @@ document.addEventListener('DOMContentLoaded', () => {
     shareBtnTop.addEventListener('click', () => {
       if (navigator.share) {
         navigator.share({
-          title: 'Thiệp Cưới Online - Quang Anh & Đoàn Diệu Thủy',
-          text: 'Trân trọng kính mời quý khách tham dự lễ thành hôn của Quang Anh & Đoàn Diệu Thủy!',
+          title: 'Thiệp Cưới Online - Quang Anh & Diệu Thủy',
+          text: 'Trân trọng kính mời quý khách tham dự lễ thành hôn của Quang Anh & Diệu Thủy!',
           url: window.location.href
-        }).catch(err => console.log('Share canceled'));
+        }).catch(() => {});
       } else {
         copyToClipboard(window.location.href);
         showToast('Đã sao chép link thiệp cưới!');
